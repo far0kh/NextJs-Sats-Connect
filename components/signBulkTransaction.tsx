@@ -3,7 +3,7 @@ import { BitcoinNetworkType, signMultipleTransactions } from "sats-connect";
 
 import * as btc from "@scure/btc-signer";
 
-import { createPSBT, getUTXOs } from "@/utils";
+import { createPSBT, getUTXOs } from "./utils";
 import { Button } from "./ui/button";
 
 type Props = {

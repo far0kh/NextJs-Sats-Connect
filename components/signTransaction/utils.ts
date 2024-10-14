@@ -1,5 +1,5 @@
 import { BitcoinNetworkType } from "sats-connect";
-import { getUTXOs, createPSBT } from "@/utils";
+import { getUTXOs, createPSBT } from "../utils";
 
 export async function createTransaction({
   network,
