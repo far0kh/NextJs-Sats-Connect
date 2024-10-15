@@ -1,0 +1,6 @@
+{
+  "name": "Next.js and Sats-Connect Application",
+  "short_name": "nextjs-sats-connect",
+  "description": "Sats Connect is a simple javascript library that connects apps to Bitcoin, Stacks & Bitcoin Layer 2 wallets like Xverse.",
+  "start_url": "/"
+}
