@@ -7,10 +7,14 @@ const inputDefaults = {
     contractAddress: "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP",
     contractName: "pox-fast-pool-v2",
     functionName: "allow-contract-caller",
-    functionArgs: `[
-  "061683ed66860315e334010bbfb76eb3eef887efee0a10706f782d666173742d706f6f6c2d7632",
-  "09"
-]`,
+    functionArgs: `["061683ed66860315e334010bbfb76eb3eef887efee0a10706f782d666173742d706f6f6c2d7632", "09"]`,
+  },
+  //ToDO
+  [BitcoinNetworkType.Signet]: {
+    contractAddress: "",
+    contractName: "",
+    functionName: "",
+    functionArgs: `[""]`,
   },
   [BitcoinNetworkType.Testnet]: {
     contractAddress: "ST000000000000000000002AMW42H",
