@@ -225,10 +225,16 @@ export default function Home() {
   //   );
   // }
 
+  const header = (
+    <div className="w-full bg-black rounded-lg">
+      <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="w-48 px-4 py-2" />
+    </div>
+  )
+
   if (!isReady) {
     return (
       <div className="flex flex-col gap-3 p-6">
-        <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="bg-black w-52 px-4 py-2" />
+        {header}
         <div className="flex flex-col gap-4 justify-start items-start">
           <h4>Network: <span className="text-orange-500">{network}</span></h4>
           <Button onClick={toggleNetwork}>
@@ -252,7 +258,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-3 p-6">
-      <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="bg-black w-52 px-4 py-2" />
+      {header}
       <h4>Connected Addresses - ({network})</h4>
       <div>
         <div className="flex flex-col gap-4">
