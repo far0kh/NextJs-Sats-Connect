@@ -1,10 +1,10 @@
 "use client";
 
-import type { Capability } from "sats-connect";
+import type { BtcRequests, Capability } from "sats-connect";
 import Wallet, {
   AddressPurpose,
   BitcoinNetworkType,
-  getAddress,
+  request,
   getCapabilities,
   getProviders,
 } from "sats-connect";
@@ -32,18 +32,15 @@ import CreateRepeatInscriptions from "@/components/createRepeatInscriptions";
 import SignBulkTransaction from "@/components/signBulkTransaction";
 import GetRunesBalance from "@/components/getRuneBalance";
 import { Button } from "@/components/ui/button";
+import { toast, useToast } from "@/hooks/use-toast"
 
 export default function Home() {
   const [paymentAddress, setPaymentAddress] = useLocalStorage("paymentAddress");
-  const [paymentPublicKey, setPaymentPublicKey] =
-    useLocalStorage("paymentPublicKey");
-  const [ordinalsAddress, setOrdinalsAddress] =
-    useLocalStorage("ordinalsAddress");
-  const [ordinalsPublicKey, setOrdinalsPublicKey] =
-    useLocalStorage("ordinalsPublicKey");
+  const [paymentPublicKey, setPaymentPublicKey] = useLocalStorage("paymentPublicKey");
+  const [ordinalsAddress, setOrdinalsAddress] = useLocalStorage("ordinalsAddress");
+  const [ordinalsPublicKey, setOrdinalsPublicKey] = useLocalStorage("ordinalsPublicKey");
   const [stacksAddress, setStacksAddress] = useLocalStorage("stacksAddress");
-  const [stacksPublicKey, setStacksPublicKey] =
-    useLocalStorage("stacksPublicKey");
+  const [stacksPublicKey, setStacksPublicKey] = useLocalStorage("stacksPublicKey");
   const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
     "network",
     BitcoinNetworkType.Testnet
@@ -111,10 +108,10 @@ export default function Home() {
       const response = await Wallet.request("getInfo", null);
 
       if (response.status === "success") {
-        alert("Success. Check console for response");
+        toast({ description: "Success. Check console for response" });
         console.log(response.result);
       } else {
-        alert("Error getting info. Check console for error logs");
+        toast({ description: "Error getting info. Check console for error logs" });
         console.error(response.error);
       }
     } catch (err) {
@@ -132,39 +129,38 @@ export default function Home() {
   };
 
   const onConnectClick = async () => {
-    await getAddress({
-      payload: {
-        purposes: [
-          AddressPurpose.Ordinals,
-          AddressPurpose.Payment,
-          AddressPurpose.Stacks,
-        ],
-        message: "SATS Connect Demo",
-        network: {
-          type: network,
-        },
-      },
-      onFinish: (response) => {
-        const paymentAddressItem = response.addresses.find(
-          (address) => address.purpose === AddressPurpose.Payment
-        );
-        setPaymentAddress(paymentAddressItem?.address);
-        setPaymentPublicKey(paymentAddressItem?.publicKey);
-
-        const ordinalsAddressItem = response.addresses.find(
-          (address) => address.purpose === AddressPurpose.Ordinals
-        );
-        setOrdinalsAddress(ordinalsAddressItem?.address);
-        setOrdinalsPublicKey(ordinalsAddressItem?.publicKey);
-
-        const stacksAddressItem = response.addresses.find(
-          (address) => address.purpose === AddressPurpose.Stacks
-        );
-        setStacksAddress(stacksAddressItem?.address);
-        setStacksPublicKey(stacksAddressItem?.publicKey);
-      },
-      onCancel: () => alert("Request canceled"),
+    const response = await request('getAccounts' as keyof BtcRequests, {
+      purposes: [
+        AddressPurpose.Ordinals,
+        AddressPurpose.Payment,
+        AddressPurpose.Stacks,
+      ],
+      message: "SATS Connect Demo",
     });
+    console.log("connected", response);
+
+    if (response.status === "success" && Array.isArray(response.result)) {
+      const paymentAddressItem = response.result.find(
+        (address) => address.purpose === AddressPurpose.Payment
+      );
+      setPaymentAddress(paymentAddressItem?.address);
+      setPaymentPublicKey(paymentAddressItem?.publicKey);
+
+      const ordinalsAddressItem = response.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      setOrdinalsAddress(ordinalsAddressItem?.address);
+      setOrdinalsPublicKey(ordinalsAddressItem?.publicKey);
+
+      const stacksAddressItem = response.result.find(
+        (address) => address.purpose === AddressPurpose.Stacks
+      );
+      setStacksAddress(stacksAddressItem?.address);
+      setStacksPublicKey(stacksAddressItem?.publicKey);
+    } else {
+      toast({ description: "Error getting accounts. Check console for error logs" });
+      console.error(response);
+    }
   };
 
   const onConnectAccountClick = async () => {
@@ -196,7 +192,7 @@ export default function Home() {
       setStacksPublicKey(stacksAddressItem?.publicKey);
     } else {
       if (response.error) {
-        alert("Error getting accounts. Check console for error logs");
+        toast({ description: "Error getting accounts. Check console for error logs" });
         console.error(response.error);
       }
     }
