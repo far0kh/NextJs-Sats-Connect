@@ -20,6 +20,14 @@ h3 {
   line-height: 2rem;
 }
 
+Button {
+  font-size: 1rem !important;
+  /* font-weight: bold !important; */
+  background-color: rgb(232, 89, 12) !important;
+  width: 180px;
+  height: 40px;
+}
+
 .container {
   display: flex;
   flex-direction: column;

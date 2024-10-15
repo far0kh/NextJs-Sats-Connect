@@ -164,6 +164,49 @@ export default function Home() {
   };
 
   const onConnectAccountClick = async () => {
+    const res1 = await Wallet.request('wallet_requestPermissions', undefined);
+    if (res1.status === 'error') {
+      console.error('Error connecting to wallet, details in terminal.');
+      console.error(res1);
+      return;
+    }
+
+    const res2 = await Wallet.request('getAddresses', {
+      purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
+    });
+    if (res2.status === "success" && Array.isArray(res2.result.addresses)) {
+      const paymentAddressItem = res2.result.addresses.find(
+        (address) => address.purpose === AddressPurpose.Payment
+      );
+      setPaymentAddress(paymentAddressItem?.address);
+      setPaymentPublicKey(paymentAddressItem?.publicKey);
+
+      const ordinalsAddressItem = res2.result.addresses.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      setOrdinalsAddress(ordinalsAddressItem?.address);
+      setOrdinalsPublicKey(ordinalsAddressItem?.publicKey);
+    } else {
+      toast({ description: "Error retrieving bitcoin addresses after having requested permissions." });
+      console.error(res2);
+      return;
+    }
+
+    const res3 = await Wallet.request('stx_getAddresses', null);
+    if (res3.status === "success" && Array.isArray(res3.result.addresses)) {
+      const stacksAddressItem = res3.result.addresses.find(
+        (address) => address.purpose === AddressPurpose.Stacks
+      );
+      setStacksAddress(stacksAddressItem?.address);
+      setStacksPublicKey(stacksAddressItem?.publicKey);
+    } else {
+      toast({ description: "Error retrieving stacks addresses after having requested permissions. Details in terminal." });
+      console.error(res3);
+      return;
+    }
+  };
+
+  const onConnectLegacyClick = async () => {
     const response = await Wallet.request("getAccounts", {
       purposes: [
         AddressPurpose.Ordinals,
@@ -223,21 +266,21 @@ export default function Home() {
       <div style={{ padding: 30 }}>
         <h1>Sats Connect Test App - {network}</h1>
         <div>Please connect your wallet to continue</div>
-        <div style={{ background: "lightgray", padding: 30, marginTop: 10 }}>
-          <Button style={{ height: 30, width: 180 }} onClick={toggleNetwork}>
+        <div className="flex flex-col gap-4 p-4 mt-4 bg-black">
+          <Button onClick={toggleNetwork}>
             Switch Network
           </Button>
-          <br />
-          <br />
-          <Button style={{ height: 30, width: 180 }} onClick={onConnectClick}>
-            Connect
-          </Button>
-          <Button
-            style={{ height: 30, width: 180, marginLeft: 10 }}
-            onClick={onConnectAccountClick}
-          >
-            Connect Account
-          </Button>
+          <div className="flex gap-4">
+            <Button onClick={onConnectClick}>
+              Connect
+            </Button>
+            <Button onClick={onConnectAccountClick}>
+              Connect Account
+            </Button>
+            <Button onClick={onConnectLegacyClick}>
+              Connect Legacy
+            </Button>
+          </div>
         </div>
       </div>
     );
