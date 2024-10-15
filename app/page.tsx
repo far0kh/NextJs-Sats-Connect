@@ -1,10 +1,9 @@
 "use client";
 
-import type { BtcRequests, Capability } from "sats-connect";
+import type { Capability } from "sats-connect";
 import Wallet, {
   AddressPurpose,
   BitcoinNetworkType,
-  request,
   getCapabilities,
   getProviders,
 } from "sats-connect";
@@ -94,8 +93,8 @@ export default function Home() {
     !!ordinalsAddress &&
     !!ordinalsPublicKey;
 
-  const onWalletDisconnect = () => {
-    Wallet.disconnect();
+  const onWalletDisconnect = async () => {
+    await Wallet.disconnect();
     setPaymentAddress(undefined);
     setPaymentPublicKey(undefined);
     setOrdinalsAddress(undefined);
@@ -122,45 +121,10 @@ export default function Home() {
   const toggleNetwork = () => {
     setNetwork(
       network === BitcoinNetworkType.Testnet
-        ? BitcoinNetworkType.Mainnet
-        : BitcoinNetworkType.Testnet
+        ? BitcoinNetworkType.Signet
+        : network === BitcoinNetworkType.Signet ? BitcoinNetworkType.Mainnet
+          : BitcoinNetworkType.Testnet
     );
-    onWalletDisconnect();
-  };
-
-  const onConnectClick = async () => {
-    const response = await request('getAccounts' as keyof BtcRequests, {
-      purposes: [
-        AddressPurpose.Ordinals,
-        AddressPurpose.Payment,
-        AddressPurpose.Stacks,
-      ],
-      message: "SATS Connect Demo",
-    });
-    console.log("connected", response);
-
-    if (response.status === "success" && Array.isArray(response.result)) {
-      const paymentAddressItem = response.result.find(
-        (address) => address.purpose === AddressPurpose.Payment
-      );
-      setPaymentAddress(paymentAddressItem?.address);
-      setPaymentPublicKey(paymentAddressItem?.publicKey);
-
-      const ordinalsAddressItem = response.result.find(
-        (address) => address.purpose === AddressPurpose.Ordinals
-      );
-      setOrdinalsAddress(ordinalsAddressItem?.address);
-      setOrdinalsPublicKey(ordinalsAddressItem?.publicKey);
-
-      const stacksAddressItem = response.result.find(
-        (address) => address.purpose === AddressPurpose.Stacks
-      );
-      setStacksAddress(stacksAddressItem?.address);
-      setStacksPublicKey(stacksAddressItem?.publicKey);
-    } else {
-      toast({ description: "Error getting accounts. Check console for error logs" });
-      console.error(response);
-    }
   };
 
   const onConnectAccountClick = async () => {
@@ -255,7 +219,7 @@ export default function Home() {
   // if (capabilityMessage) {
   //   return (
   //     <div style={{ padding: 30 }}>
-  //       <h1>Sats Connect Test App - {network}</h1>
+  //       <h1>Sats Connect - {network}</h1>
   //       <div>{capabilityMessage}</div>
   //     </div>
   //   );
@@ -263,17 +227,17 @@ export default function Home() {
 
   if (!isReady) {
     return (
-      <div style={{ padding: 30 }}>
-        <h1>Sats Connect Test App - {network}</h1>
-        <div>Please connect your wallet to continue</div>
-        <div className="flex flex-col gap-4 p-4 mt-4 bg-black">
+      <div className="flex flex-col gap-3 p-6">
+        <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="bg-black w-52 px-4 py-2" />
+        <div className="flex flex-col gap-4 justify-start items-start">
+          <h4>Network: <span className="text-orange-500">{network}</span></h4>
           <Button onClick={toggleNetwork}>
             Switch Network
           </Button>
+        </div>
+        <div className="mt-4"><h4>Please connect your wallet to continue:</h4></div>
+        <div className="flex flex-col gap-4">
           <div className="flex gap-4">
-            <Button onClick={onConnectClick}>
-              Connect
-            </Button>
             <Button onClick={onConnectAccountClick}>
               Connect Account
             </Button>
@@ -287,23 +251,34 @@ export default function Home() {
   }
 
   return (
-    <div style={{ padding: 30 }}>
-      <h1>Sats Connect Test App - {network}</h1>
+    <div className="flex flex-col gap-3 p-6">
+      <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="bg-black w-52 px-4 py-2" />
+      <h4>Connected Addresses - ({network})</h4>
       <div>
-        <div>Payment Address: {paymentAddress}</div>
-        <div>Payment PubKey: {paymentPublicKey}</div>
-        <div>Ordinals Address: {ordinalsAddress}</div>
-        <div>Ordinals PubKey: {ordinalsPublicKey}</div>
-        <br />
-
-        <div className="container">
-          <h3>Disconnect wallet</h3>
+        <div className="flex flex-col gap-4">
+          <div>
+            <h4>Payment</h4>
+            <p><b>Address:</b> {paymentAddress}</p>
+            <p><b>Public Key:</b> {paymentPublicKey}</p>
+          </div>
+          <div className="mt-4">
+            <h4>Ordinals</h4>
+            <p><b>Address:</b> {ordinalsAddress}</p>
+            <p><b>Public Key:</b> {ordinalsPublicKey}</p>
+          </div>
+          <div className="mt-4">
+            <h4>Stacks</h4>
+            <p><b>Address:</b> {stacksAddress}</p>
+            <p><b>Public Key:</b> {stacksPublicKey}</p>
+          </div>
           <Button onClick={onWalletDisconnect}>Disconnect</Button>
         </div>
+
         <div className="container">
           <h3>Get Wallet Info</h3>
           <Button onClick={handleGetInfo}>Request Info</Button>
         </div>
+
         <SignTransaction
           paymentAddress={paymentAddress}
           paymentPublicKey={paymentPublicKey}

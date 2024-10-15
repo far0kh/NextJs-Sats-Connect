@@ -3,29 +3,33 @@
 @tailwind utilities;
 
 h1 {
-  font-size: 2em;
+  font-size: 2rem;
   font-weight: bold;
   line-height: 3rem;
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-weight: bold;
   line-height: 2.5rem;
 }
 
 h3 {
-  font-size: 1.2em;
+  font-size: 1.3rem;
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+h4 {
+  font-size: 1.1rem;
   font-weight: bold;
   line-height: 2rem;
 }
 
 Button {
   font-size: 1rem !important;
-  /* font-weight: bold !important; */
   background-color: rgb(232, 89, 12) !important;
-  width: 180px;
-  height: 40px;
+  width: 180px !important;
 }
 
 .container {

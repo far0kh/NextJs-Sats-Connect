@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 export function useLocalStorage<T extends string = string>(
@@ -14,16 +16,17 @@ export function useLocalStorage<T extends string = string>(
   initialValue?: T
 ): [T | undefined, (value: T | undefined) => void] | [T, (value: T) => void] {
   const [storedValue, setStoredValue] = useState<T | undefined>(
-    () => (localStorage.getItem(key) || initialValue) as T | undefined
+    () => (global?.window !== undefined && localStorage.getItem(key) || initialValue) as T | undefined
   );
 
   const setValue = (value: T | undefined) => {
     setStoredValue(value);
-
-    if (value === undefined) {
-      localStorage.removeItem(key);
-    } else {
-      localStorage.setItem(key, value);
+    if (global?.window !== undefined) {
+      if (value === undefined) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, value);
+      }
     }
   };
 
