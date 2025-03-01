@@ -29,9 +29,11 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useEffect, useMemo, useState } from "react";
 import CreateRepeatInscriptions from "@/components/createRepeatInscriptions";
 import SignBulkTransaction from "@/components/signBulkTransaction";
+import GetInscriptions from "@/components/getInscriptions";
 import GetRunesBalance from "@/components/getRuneBalance";
 import { Button } from "@/components/ui/button";
 import { toast, useToast } from "@/hooks/use-toast"
+import { GetAddresses } from "@/components/getAddresses";
 
 export default function Home() {
   const [paymentAddress, setPaymentAddress] = useLocalStorage("paymentAddress");
@@ -40,9 +42,9 @@ export default function Home() {
   const [ordinalsPublicKey, setOrdinalsPublicKey] = useLocalStorage("ordinalsPublicKey");
   const [stacksAddress, setStacksAddress] = useLocalStorage("stacksAddress");
   const [stacksPublicKey, setStacksPublicKey] = useLocalStorage("stacksPublicKey");
-  const [network, setNetwork] = useLocalStorage<BitcoinNetworkType>(
+  const [network, setNetwork] = useLocalStorage<BitcoinNetworkType.Mainnet | BitcoinNetworkType.Signet | BitcoinNetworkType.Testnet4>(
     "network",
-    BitcoinNetworkType.Testnet
+    BitcoinNetworkType.Testnet4
   );
   const [capabilityState, setCapabilityState] = useState<
     "loading" | "loaded" | "missing" | "cancelled"
@@ -107,7 +109,7 @@ export default function Home() {
       const response = await Wallet.request("getInfo", null);
 
       if (response.status === "success") {
-        toast({ description: "Success. Check console for response" });
+        toast({ title: "Success", description: "Check console for response." });
         console.log(response.result);
       } else {
         toast({ description: "Error getting info. Check console for error logs" });
@@ -120,10 +122,13 @@ export default function Home() {
 
   const toggleNetwork = () => {
     setNetwork(
-      network === BitcoinNetworkType.Testnet
-        ? BitcoinNetworkType.Signet
-        : network === BitcoinNetworkType.Signet ? BitcoinNetworkType.Mainnet
-          : BitcoinNetworkType.Testnet
+      // network === BitcoinNetworkType.Testnet4
+      //   ? BitcoinNetworkType.Signet
+      //   : network === BitcoinNetworkType.Signet ? BitcoinNetworkType.Mainnet
+      //     : BitcoinNetworkType.Testnet4
+      network === BitcoinNetworkType.Testnet4
+        ? BitcoinNetworkType.Mainnet
+        : BitcoinNetworkType.Testnet4
     );
   };
 
@@ -227,7 +232,7 @@ export default function Home() {
 
   const header = (
     <div className="w-full bg-black rounded-lg">
-      <img src="/sats-connect-logo.svg" alt="Sats Connect Logo" className="w-48 px-4 py-2" />
+      <img src="/logo-dark.webp" alt="Beyonds Logo" className="w-48 px-4 py-2" />
     </div>
   )
 
@@ -272,15 +277,16 @@ export default function Home() {
             <p><b>Address:</b> {ordinalsAddress}</p>
             <p><b>Public Key:</b> {ordinalsPublicKey}</p>
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <h4>Stacks</h4>
             <p><b>Address:</b> {stacksAddress}</p>
             <p><b>Public Key:</b> {stacksPublicKey}</p>
-          </div>
+          </div> */}
           <Button onClick={onWalletDisconnect}>Disconnect</Button>
         </div>
 
         <div className="container">
+          <GetAddresses />
           <h3>Get Wallet Info</h3>
           <Button onClick={handleGetInfo}>Request Info</Button>
         </div>
@@ -314,6 +320,8 @@ export default function Home() {
           network={network}
           capabilities={capabilities!}
         />
+
+        <GetInscriptions />
         <GetRunesBalance />
 
         <CreateTextInscription network={network} capabilities={capabilities!} />
@@ -325,7 +333,7 @@ export default function Home() {
 
         <CreateFileInscription network={network} capabilities={capabilities!} />
       </div>
-      {stacksAddress && (
+      {false && stacksAddress && (
         <>
           <h2>Stacks</h2>
           <div>
@@ -337,7 +345,7 @@ export default function Home() {
 
             <StxGetAddresses />
 
-            <StxTransferStx address={stacksAddress} />
+            <StxTransferStx address={stacksAddress!} />
 
             <StxSignTransaction
               network={network}

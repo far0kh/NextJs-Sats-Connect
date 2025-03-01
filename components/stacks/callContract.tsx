@@ -16,7 +16,7 @@ const inputDefaults = {
     functionName: "",
     functionArgs: `[""]`,
   },
-  [BitcoinNetworkType.Testnet]: {
+  [BitcoinNetworkType.Testnet4]: {
     contractAddress: "ST000000000000000000002AMW42H",
     contractName: "pox-3",
     functionName: "stack-increase",
@@ -25,7 +25,7 @@ const inputDefaults = {
 };
 
 type Props = {
-  network: BitcoinNetworkType;
+  network: BitcoinNetworkType.Mainnet | BitcoinNetworkType.Signet | BitcoinNetworkType.Testnet4;
 };
 
 function CallContract({ network }: Props) {

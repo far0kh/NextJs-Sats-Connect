@@ -20,7 +20,7 @@ export const getUTXOs = async (
   address: string
 ): Promise<UTXO[]> => {
   const networkSubpath =
-    network === BitcoinNetworkType.Testnet ? "/testnet" : "";
+    network === BitcoinNetworkType.Testnet4 ? "/testnet" : "";
 
   const url = `https://mempool.space${networkSubpath}/api/address/${address}/utxo`;
   const response = await fetch(url);
@@ -38,7 +38,7 @@ export const createPSBT = async (
   recipient2: string
 ) => {
   const network =
-    networkType === BitcoinNetworkType.Testnet ? btc.TEST_NETWORK : btc.NETWORK;
+    networkType === BitcoinNetworkType.Testnet4 ? btc.TEST_NETWORK : btc.NETWORK;
 
   // choose first unspent output
   const paymentOutput = paymentUnspentOutputs[0];

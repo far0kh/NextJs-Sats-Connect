@@ -2,7 +2,7 @@ import { request } from "sats-connect";
 
 function GetAccounts() {
   async function handleGetAccountsClick() {
-    const response = await request("stx_getAccounts", {});
+    const response = await request("stx_getAccounts", null);
 
     if (response.status === "success") {
       alert("Success getting accounts. Check console for results.");

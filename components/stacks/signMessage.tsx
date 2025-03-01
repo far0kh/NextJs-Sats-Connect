@@ -14,6 +14,7 @@ const StacksSignMessage = ({ network }: Props) => {
     const message = "Hello World 123";
     const response = await request("stx_signMessage", {
       message,
+      publicKey: "your-public-key-here",
     });
     if (response.status === "success") {
       alert("Success! Check the console for the response.");

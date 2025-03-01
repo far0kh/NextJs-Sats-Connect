@@ -7,11 +7,12 @@ import { BitcoinNetworkType, request } from "sats-connect";
  */
 const chainIds = {
   [BitcoinNetworkType.Mainnet]: 1,
-  [BitcoinNetworkType.Testnet]: 2147483648,
+  [BitcoinNetworkType.Signet]: 3,
+  [BitcoinNetworkType.Testnet4]: 4,
 };
 
 interface Props {
-  network: BitcoinNetworkType;
+  network: BitcoinNetworkType.Mainnet | BitcoinNetworkType.Signet | BitcoinNetworkType.Testnet4;
 }
 export function SignStructuredMessage({ network }: Props) {
   const onMessagingSigningClicked = async () => {

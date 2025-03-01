@@ -18,7 +18,7 @@ function SignTransaction(props: Props) {
   const handleSignTransactionContractCallClick = async () => {
     const transaction = await makeUnsignedContractCall({
       fee: 3000,
-      anchorMode: "onChainOnly",
+      // anchorMode: "onChainOnly",
       contractAddress: "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP",
       contractName: "pox-fast-pool-v2",
       functionName: "set-stx-buffer",
@@ -27,7 +27,7 @@ function SignTransaction(props: Props) {
     });
     try {
       const response = await request("stx_signTransaction", {
-        transaction: uint8ArrayToHex(transaction.serialize()),
+        transaction: transaction.serialize(),
       });
       if (response.status === "success") {
         alert("Success! Check console for result.");
@@ -44,7 +44,7 @@ function SignTransaction(props: Props) {
 
   const handleSignTransactionSTXTokenTransferClick = async () => {
     const transaction = await makeUnsignedSTXTokenTransfer({
-      anchorMode: "any",
+      // anchorMode: "any",
       fee: 3000,
       recipient: "SP2FFKDKR122BZWS7GDPFWC0J0FK4WMW5NPQ0Z21M", // account 4
       amount: 1000,
@@ -52,7 +52,7 @@ function SignTransaction(props: Props) {
     });
     try {
       const response = await request("stx_signTransaction", {
-        transaction: uint8ArrayToHex(transaction.serialize()),
+        transaction: transaction.serialize(),
       });
       if (response.status === "success") {
         console.log(response.result.transaction);
@@ -68,7 +68,7 @@ function SignTransaction(props: Props) {
 
   const handleSignTransactionContractDeployClick = async () => {
     const transaction = await makeUnsignedContractDeploy({
-      anchorMode: "any",
+      // anchorMode: "any",
       contractName: "my-contract",
       codeBody: code,
       fee: 3000,
@@ -76,7 +76,7 @@ function SignTransaction(props: Props) {
     });
     try {
       const response = await request("stx_signTransaction", {
-        transaction: uint8ArrayToHex(transaction.serialize()),
+        transaction: transaction.serialize(),
       });
       if (response.status === "success") {
         console.log(response.result.transaction);

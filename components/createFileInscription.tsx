@@ -32,7 +32,7 @@ const CreateBinaryInscription = ({ network, capabilities }: Props) => {
         onCancel: () => alert("Canceled"),
       });
     } catch (error) {
-      alert(`An error ocurred: ${error.message}`);
+      alert(`An error ocurred: ${error}`);
     }
   };
 

@@ -10,38 +10,55 @@ type Props = {
 const CreateTextInscription = ({ network, capabilities }: Props) => {
   const [suggestedMinerFeeRate, setSuggestedMinerFeeRate] = useState<number>(8);
 
+  //   const [content, setContent] = useState<string>(
+  //     `<html>
+  //     <body
+  //       style="
+  //         display: flex;
+  //         flex-direction: column;
+  //         justify-content: center;
+  //         align-items: center;
+  //         height: 100%;
+  //       "
+  //     >
+  //       <p>Hello World!</p>
+  //       <p>I am recursive!!</p>
+  //       <img
+  //         src="/content/6fb976ab49dcec017f1e201e84395983204ae1a7c2abf7ced0a85d692e442799i0"
+  //       />
+  //       <div id="content">Fetching current block height...</div>
+  //       <script>
+  //         const fetchBlockheight = () =>
+  //           fetch("/blockheight")
+  //             .then((response) => response.text())
+  //             .then((data) => {
+  //               document.getElementById("content").textContent =
+  //                 "Current block height: " + data;
+  //             })
+  //             .catch(console.error);
+  //         setTimeout(fetchBlockheight, 2000);
+  //       </script>
+  //     </body>
+  //   </html>
+  // `
+  //   );
+
   const [content, setContent] = useState<string>(
     `<html>
-    <body
-      style="
+<body style="
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100%;
-      "
-    >
-      <p>Hello World!</p>
-      <p>I am recursive!!</p>
-      <img
-        src="/content/6fb976ab49dcec017f1e201e84395983204ae1a7c2abf7ced0a85d692e442799i0"
-      />
-      <div id="content">Fetching current block height...</div>
-      <script>
-        const fetchBlockheight = () =>
-          fetch("/blockheight")
-            .then((response) => response.text())
-            .then((data) => {
-              document.getElementById("content").textContent =
-                "Current block height: " + data;
-            })
-            .catch(console.error);
-        setTimeout(fetchBlockheight, 2000);
-      </script>
-    </body>
-  </html>
-`
+        background: #fff;
+        color: #000;
+      ">
+  <p>Hello World!</p>
+</body>
+</html>`
   );
+
+
   const [contentType, setContentType] = useState<string>("text/html");
   const onCreateClick = async () => {
     try {
